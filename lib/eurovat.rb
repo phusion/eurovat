@@ -68,6 +68,10 @@ class Eurovat
     end
   end
 
+  def self.sanitize_vat_number(vat_number)
+    vat_number.gsub(/[\s\t\.]/, '').upcase
+  end
+
   def self.check_vat_number(vat_number)
     @@instance ||= new
     @@instance.check_vat_number(vat_number)
@@ -85,7 +89,7 @@ class Eurovat
 
   # Any exception other than InvalidFormatError indicates that the service is down.
   def check_vat_number(vat_number)
-    vat_number = sanitize_vat_number(vat_number)
+    vat_number = Eurovat.sanitize_vat_number(vat_number)
     if vat_number =~ VAT_FORMAT
       country_code = $1
       number = $2
@@ -137,9 +141,5 @@ private
     else
       !!val
     end
-  end
-
-  def sanitize_vat_number(vat_number)
-    vat_number.gsub(/[\s\t\.]/, '').upcase
   end
 end
