@@ -29,7 +29,7 @@ Setup your company's own country first. This value defaults to 'Netherlands'. It
     # Customer is a business outside one's country, but inside the EU. Must we charge VAT?
     Eurovat.must_charge_vat?('Germany', 'some valid German VAT number')   => false
 
-Use `Eurovat#check_vat_number` to check whether a VAT number is correct. This method contacts the European Union VAT checking service and returns true if the VAT number is valid and false if it isn't. If the VAT number doesn't even look like one, then it will raise `Eurovat::InvalidFormatError`.
+Use `Eurovat#check_vat_number` to check whether a VAT number is correct. This method contacts the European Union VAT checking service and returns true if the VAT number is valid and false if it isn't. If the VAT number doesn't even look like one, then it will raise `Eurovat::InvalidFormatError`. Any exception other than `Eurovat::InvalidFormatError` indicates that the service is down.
 
     eurovat = Eurovat.new
     eurovat.check_vat_number('NL819225642B01')   => true
