@@ -15,7 +15,7 @@ Setup your company's own country first. This value defaults to 'Netherlands'. It
 
     Eurovat.country = 'Netherlands'
 
-`Eurovat.must_charge_vat(customer_country, vat_number)` is used for checking whether you need to charge a customer VAT.
+`Eurovat.must_charge_vat(customer_country, vat_number)` is used for checking whether you need to charge a customer VAT, according to the Dutch VAT rules. I do not know whether these rules apply only to the Netherlands or to the entire EU, so you should do your research before using this function. This function also does not take care of exceptions to the rule, e.g. conferences that are organized within the EU (for which VAT must always be charged no matter what).
 
     # Customer is from United States and didn't supply a VAT number. Must we charge VAT?
     Eurovat.must_charge_vat?('United States', nil)   => false
@@ -29,13 +29,17 @@ Setup your company's own country first. This value defaults to 'Netherlands'. It
     # Customer is a business outside one's country, but inside the EU. Must we charge VAT?
     Eurovat.must_charge_vat?('Germany', 'some valid German VAT number')   => false
 
-Use `Eurovat#check_vat_number` to check whether a VAT number is correct. This method contacts the European Union VAT checking service and returns true if the VAT number is valid and false if it isn't. If the VAT number doesn't even look like one, then it will raise `Eurovat::InvalidFormatError`. Any exception other than `Eurovat::InvalidFormatError` indicates that the service is down.
+Use `Eurovat#check_vat_number` to check whether a VAT number is correct. This method contacts the [European Union VAT checking service](http://ec.europa.eu/taxation_customs/vies/) and returns true if the VAT number is valid and false if it isn't. If the VAT number doesn't even look like one, then it will raise `Eurovat::InvalidFormatError`. Any exception other than `Eurovat::InvalidFormatError` indicates that the service is down.
 
     eurovat = Eurovat.new
     eurovat.check_vat_number('NL819225642B01')   => true
     eurovat.check_vat_number('NL010101010B99')   => false
     # It automatically strips away spaces and dots:
     eurovat.check_vat_number('NL8192.25.642.B01')   => true
+
+## About the EU VAT checking service's uptime
+
+Experience has shown that the EU VAT checking service's uptime really sucks. While organizing [BubbleConf](http://www.bubbleconf.com/) we've experienced multiple outages that lasted for hours, if not days, which affected sales and attendee satisfaction. Even though we are required by law to check for the validity of the VAT number, I strongly recommend you not to reject business transactions when the EU VAT checker is down, like we did at first. Instead, silently accept their VAT number but put a flag on it, and check these VAT numbers *later* when the EU VAT checking service is up again.
 
 ## Other notes
 
