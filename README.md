@@ -9,6 +9,12 @@ When using Rails, add this to your Gemfile:
     gem 'eurovat'
     gem 'savon', :platforms => :ruby_19
 
+## Cryptographic verification
+
+Our gem is signed using PGP with the [Phusion Software Signing key](http://www.phusion.nl/about/gpg). That key in turn is signed by [the rubygems-openpgp Certificate Authority](http://www.rubygems-openpgp-ca.org/).
+
+You can verify the authenticity of the gem by following [The Complete Guide to Verifying Gems with rubygems-openpgp](http://www.rubygems-openpgp-ca.org/blog/the-complete-guide-to-verifying-gems-with-rubygems-openpgp.html).
+
 ## Usage
 
 Setup your company's own country first. This value defaults to 'Netherlands'. It assumes that your own country is a country within the European Union. We currently do not support businesses that are located outside the EU but for some reason still need to work with EU VAT.

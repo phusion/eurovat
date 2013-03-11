@@ -1,3 +1,3 @@
 class Eurovat
-  VERSION_STRING = '1.0.1'
+  VERSION_STRING = '1.0.2'
 end
