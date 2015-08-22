@@ -83,7 +83,7 @@ class Eurovat
     if defined?(SOAP)
       @driver = SOAP::WSDLDriverFactory.new(SERVICE_URL).create_rpc_driver
     else
-      @driver = Savon::Client.new(SERVICE_URL)
+      @driver = Savon.client(wsdl: SERVICE_URL)
     end
   end
 
