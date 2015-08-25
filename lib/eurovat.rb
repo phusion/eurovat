@@ -16,6 +16,7 @@ class Eurovat
     'Belgium',
     'Bulgaria',
     'Cyprus',
+    'Croatia',
     'Czech Republic',
     'Denmark',
     'Estonia',
