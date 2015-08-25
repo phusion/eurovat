@@ -16,6 +16,7 @@ class Eurovat
     'Belgium',
     'Bulgaria',
     'Cyprus',
+    'Croatia',
     'Czech Republic',
     'Denmark',
     'Estonia',
@@ -83,7 +84,7 @@ class Eurovat
     if defined?(SOAP)
       @driver = SOAP::WSDLDriverFactory.new(SERVICE_URL).create_rpc_driver
     else
-      @driver = Savon::Client.new(SERVICE_URL)
+      @driver = Savon.client(wsdl: SERVICE_URL)
     end
   end
 
@@ -111,14 +112,12 @@ class Eurovat
       else
         @mutex.synchronize do
           begin
-            result = @driver.request(:checkVat) do
-              soap.body = {
+            result = @driver.call(:check_vat, message: {
                 :countryCode => country_code,
                 :vatNumber => number
-              }
-            end
-            result[:check_vat_response][:valid]
-          rescue Savon::SOAP::Fault => e
+              })
+            result.body[:check_vat_response][:valid]
+          rescue Savon::SOAPFault => e
             if e.message =~ /INVALID_INPUT/
               raise InvalidFormatError, "#{vat_number.inspect} is not formatted like a valid VAT number"
             else

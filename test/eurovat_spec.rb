@@ -8,13 +8,13 @@ describe Eurovat do
 
   it "works" do
     @eurovat = Eurovat.new
-    @eurovat.check_vat_number('NL819225642B01').should be_true
-    @eurovat.check_vat_number('NL010101010B99').should be_false
+    @eurovat.check_vat_number('FI20584306').should be_truthy
+    @eurovat.check_vat_number('NL010101010B99').should be_falsey
   end
 
   it "strips away spaces and dots" do
     @eurovat = Eurovat.new
-    @eurovat.check_vat_number('nl8192.25 642.b01').should be_true
+    @eurovat.check_vat_number('FI 2058.4306').should be_truthy
   end
 
   it "raises InvalidFormatError if the VAT number is not formatted like one" do
@@ -24,20 +24,20 @@ describe Eurovat do
   end
 
   it "always charges VAT if the customer is from one's own country" do
-    Eurovat.must_charge_vat?('Netherlands', nil).should be_true
-    Eurovat.must_charge_vat?('Netherlands', 'NL819225642B01').should be_true
+    Eurovat.must_charge_vat?('Netherlands', nil).should be_truthy
+    Eurovat.must_charge_vat?('Netherlands', 'NL819225642B01').should be_truthy
   end
 
   it "doesn't charge VAT if the customer is outside one's own country and supplied a VAT number" do
-    Eurovat.must_charge_vat?('Germany', 'NL819225642B01').should be_false
-    Eurovat.must_charge_vat?('United States', 'NL819225642B01').should be_false
+    Eurovat.must_charge_vat?('Germany', 'NL819225642B01').should be_falsey
+    Eurovat.must_charge_vat?('United States', 'NL819225642B01').should be_falsey
   end
 
   it "charges VAT if the customer is outside one's own country, but inside the EU, and didn't supply a VAT number" do
-    Eurovat.must_charge_vat?('Germany', nil).should be_true
+    Eurovat.must_charge_vat?('Germany', nil).should be_truthy
   end
 
   it "doesn't charge VAT if the customer is outside one's own country, outside the EU, and didn't supply a VAT number" do
-    Eurovat.must_charge_vat?('United States', nil).should be_false
+    Eurovat.must_charge_vat?('United States', nil).should be_falsey
   end
 end
