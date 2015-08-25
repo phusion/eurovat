@@ -111,14 +111,12 @@ class Eurovat
       else
         @mutex.synchronize do
           begin
-            result = @driver.request(:checkVat) do
-              soap.body = {
+            result = @driver.call(:check_vat, message: {
                 :countryCode => country_code,
                 :vatNumber => number
-              }
-            end
-            result[:check_vat_response][:valid]
-          rescue Savon::SOAP::Fault => e
+              })
+            result.body[:check_vat_response][:valid]
+          rescue Savon::SOAPFault => e
             if e.message =~ /INVALID_INPUT/
               raise InvalidFormatError, "#{vat_number.inspect} is not formatted like a valid VAT number"
             else
